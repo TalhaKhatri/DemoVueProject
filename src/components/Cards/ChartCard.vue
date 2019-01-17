@@ -71,8 +71,17 @@ export default {
   },
   data() {
     return {
-      chartId: "no-id"
+      chartId: "no-id",
+      chart: null
     };
+  },
+  watch: {
+    chartData: {
+      handler: function(newData) {
+        this.chart.update(newData);
+      },
+      deep: true
+    }
   },
   methods: {
     /***
@@ -80,7 +89,7 @@ export default {
      */
     initChart(Chartist) {
       const chartIdQuery = `#${this.chartId}`;
-      Chartist[this.chartType](
+      this.chart = Chartist[this.chartType](
         chartIdQuery,
         this.chartData,
         this.chartOptions
