@@ -124,15 +124,11 @@ export default {
   },
   methods: {
     login: function(email, password) {
-      console.log(email,password)
       this.$http.post(`${this.baseURI}/login`, { email, password })
       .then((result) => {
         if(result.data == true) {
-          console.log('doneee')
           this.$store.commit('authenticate');
-          console.log(this.$store.state.authenticated)
           this.$router.push('dashboard');
-          
         }
       });
     }
