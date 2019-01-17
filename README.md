@@ -23,6 +23,10 @@ npm install
 ```
 npm run dev
 ```
+### start server at localhost:3000
+```
+npm run server
+```
 ### build for production with minification
 ```
 npm run build
