@@ -1,6 +1,16 @@
 <template>
   <div>
-
+    <div class="row mb-3">
+      <div class="col">
+          <el-date-picker
+            class="float-right"
+            v-model="date"
+            type="daterange"
+            start-placeholder="Start date"
+            end-placeholder="End date">
+          </el-date-picker>
+      </div>
+    </div>
     <!--Stats cards-->
     <div class="row">
       <div class="col-md-6 col-xl-3" v-for="stats in statsCards" :key="stats.title">
@@ -26,7 +36,8 @@
         <chart-card title="Users behavior"
                     sub-title="24 Hours performance"
                     :chart-data="usersChart.data"
-                    :chart-options="usersChart.options">
+                    :chart-options="usersChart.options"
+                    ref="usersChartComponent">
           <span slot="footer">
             <i class="ti-reload"></i> Updated 3 minutes ago
           </span>
@@ -187,8 +198,78 @@ export default {
           series: [62, 32, 6]
         },
         options: {}
-      }
+      },
+      date: '',
+      baseURI: 'http://localhost:3000',
+      data: [
+            [287, 385, 490, 562, 594, 626, 698, 895, 952],
+            [67, 152, 193, 240, 387, 435, 535, 642, 744],
+            [23, 113, 67, 108, 190, 239, 307, 410, 410]
+          ]
     };
+  },
+  beforeMount: function() {
+    this.loadData();
+  },
+  watch: {
+    date: function (newDate) {
+      this.loadData();
+    }
+  },
+  methods: {
+    getCapacity: function () {
+      this.$http.get(`${this.baseURI}/statscards/capacity`)
+      .then((result) => {
+        this.statsCards[0] = result.data;
+      });
+    },
+    getRevenue: function () {
+      this.$http.get(`${this.baseURI}/statscards/revenue`)
+      .then((result) => {
+        this.statsCards[1] = result.data;
+      });
+    },
+    getErrors: function () {
+      this.$http.get(`${this.baseURI}/statscards/errors`)
+      .then((result) => {
+        this.statsCards[2] = result.data;
+      });
+    },
+    getFollowers: function () {
+      this.$http.get(`${this.baseURI}/statscards/followers`)
+      .then((result) => {
+        this.statsCards[3] = result.data;
+      });
+    },
+    getUsersChart: function () {
+      this.$http.get(`${this.baseURI}/userschart`)
+      .then((result) => {
+        this.usersChart.data.series = result.data;
+      });
+    },
+    getActivityChart: function () {
+      this.$http.get(`${this.baseURI}/activitychart`)
+      .then((result) => {
+        this.activityChart.data.series = result.data;
+      });
+    },
+    getPreferencesChart: function () {
+      this.$http.get(`${this.baseURI}/preferenceschart`)
+      .then((result) => {
+        let labels = result.data.map((el) => `${el}%`)
+        this.preferencesChart.data.series = result.data;
+        this.preferencesChart.data.labels = labels;
+      });
+    },
+    loadData: function () {
+      this.getCapacity();
+      this.getRevenue();
+      this.getErrors();
+      this.getFollowers();
+      this.getUsersChart();
+      this.getActivityChart();
+      this.getPreferencesChart();
+    }
   }
 };
 </script>
