@@ -23,7 +23,7 @@ npm install
 ```
 npm run dev
 ```
-### start server at localhost:3000
+### start backend server at localhost:3000
 ```
 npm run server
 ```
